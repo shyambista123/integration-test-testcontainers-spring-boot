@@ -13,11 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,8 +57,7 @@ public class BookControllerTestIT{
         // Add a book to the database to ensure there's data for `getAllBooks_returnAllBooks`
         BookDTO book = new BookDTO("test title", "author");
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/v1/books")
+        mockMvc.perform(post("/api/v1/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(book)))
                 .andExpect(status().isOk())
@@ -69,8 +69,7 @@ public class BookControllerTestIT{
     void addBook() throws Exception {
         BookDTO book = new BookDTO("test title", "author");
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/v1/books")
+        mockMvc.perform(post("/api/v1/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(book)))
                 .andExpect(status().isOk())
@@ -80,7 +79,7 @@ public class BookControllerTestIT{
 
     @Test
     void getAllBooks_returnAllBooks() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/books"))
+        mockMvc.perform(get("/api/v1/books"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*").exists());
     }
